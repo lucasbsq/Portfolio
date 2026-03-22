@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bousquet Lucas</title>
+  <link rel="icon" type="image/webp" href="logo.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-index.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-logo"><img src="logo.webp" alt="Logo Lucas Bousquet"></div>
+    <ul class="nav-links">
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="content-left">
+      <p class="tag">Étudiant en MMI</p>
+      <h1 class="headline">
+        <span class="line"><span class="accent">Lucas</span></span>
+        <span class="line"><span>Bousquet.</span></span>
+      </h1>
+      <p class="sub">Apprenti en développement web, graphisme et stratégie de communication.</p>
+      <a class="cta" href="#">Voir mon travail</a>
+    </div>
+
+  </section>
+
+  <section class="next">
+  </section>
+
+  <script>
+    const hero = document.querySelector('.hero');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const heroHeight = hero.offsetHeight;
+      const opacity = 1 - (scrollY / (heroHeight * 0.6));
+      hero.style.opacity = Math.max(0, opacity);
+    });
+  </script>
+</body>
+</html>
