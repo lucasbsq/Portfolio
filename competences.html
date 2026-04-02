@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compétences — Lucas Bousquet</title>
+  <link rel="icon" type="image/webp" href="logo.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,900;1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-pages.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-logo" href="index-v2.html">Lucas</a>
+    <ul class="nav-links">
+      <li><a href="index-v2.html">Accueil</a></li>
+      <li><a href="projets.html">Projets</a></li>
+      <li><a href="competences.html" class="active">Compétences</a></li>
+      <li><a href="apropos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="page-header-inner">
+      <p class="page-label">Ce que je sais faire</p>
+      <h1 class="page-title">
+        <span class="page-line"><span>Compé<em style="font-style:italic;color:#e02020;">tences</em></span></span>
+        <span class="page-line"><span>& Outils<em style="font-style:normal;color:#e02020;">.</em></span></span>
+      </h1>
+      <p class="page-sub">Du code au design, de la stratégie au motion — un profil pluridisciplinaire au service de projets ambitieux.</p>
+    </div>
+  </header>
+
+  <!-- COMPÉTENCES -->
+  <section class="section">
+    <h2 class="section-title">Mes compé<em>tences.</em></h2>
+    <div class="skills-grid">
+
+      <div class="skill-block">
+        <div class="skill-name">HTML / CSS</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">Photoshop</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">Illustrator</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">InDesign</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">Typographie</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+      <div class="skill-block">
+        <div class="skill-name">Communication</div>
+        <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OUTILS -->
+  <section class="section">
+    <div class="tools-layout">
+      <div>
+        <h2 class="tools-heading">Mes<br><em>outils.</em></h2>
+      </div>
+      <div class="tools-list">
+        <div class="tool-row">
+          <span class="tool-name">Visual Studio Code</span>
+        </div>
+        <div class="tool-row">
+          <span class="tool-name">Adobe Photoshop</span>
+        </div>
+        <div class="tool-row">
+          <span class="tool-name">Adobe Illustrator</span>
+        </div>
+        <div class="tool-row">
+          <span class="tool-name">Adobe InDesign</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span class="footer-copy">© 2025 Lucas Bousquet — MMI Béziers</span>
+    <a class="footer-back" href="#top">↑ Haut de page</a>
+  </footer>
+
+  <script>
+    const skillBlocks = document.querySelectorAll('.skill-block');
+    const toolRows = document.querySelectorAll('.tool-row');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    skillBlocks.forEach(el => obs.observe(el));
+    toolRows.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

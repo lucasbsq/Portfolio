@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Lucas Bousquet</title>
+  <link rel="icon" type="image/webp" href="logo.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,900;1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-pages.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-logo" href="index-v2.html">Lucas</a>
+    <ul class="nav-links">
+      <li><a href="index-v2.html">Accueil</a></li>
+      <li><a href="projets.html">Projets</a></li>
+      <li><a href="competences.html">Compétences</a></li>
+      <li><a href="apropos.html">À propos</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="page-header-inner">
+      <p class="page-label">Me contacter</p>
+      <h1 class="page-title">
+        <span class="page-line"><span>Travaillons</span></span>
+        <span class="page-line"><span>ensemble<em style="font-style:normal;color:#e02020;">.</em></span></span>
+      </h1>
+      <p class="page-sub">Un projet, une idée, une question ? Je suis disponible pour des collaborations, des stages ou des missions freelance.</p>
+    </div>
+  </header>
+
+  <!-- EMAIL GRAND FORMAT -->
+  <section class="section" style="padding-bottom:0;">
+    <p style="font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(10,10,10,0.35); margin-bottom:0.5rem;">Email direct</p>
+    <a class="contact-big-email" href="/cdn-cgi/l/email-protection#58342d3b392b763a372d2b292d3d2c183d2c2d762d36312e753537362c286a763e2a">
+      <span class="__cf_email__" data-cfemail="9ff3eafcfeecb1fdf0eaeceeeafaebdffaebeab1eaf1f6e9b2f2f0f1ebefadb1f9ed">[email&#160;protected]</span>
+    </a>
+  </section>
+
+  <!-- GRILLE RÉSEAUX + FORMULAIRE -->
+  <section class="section">
+    <div class="contact-grid">
+
+      <!-- Réseaux sociaux -->
+      <div class="contact-col">
+        <span class="contact-col-label">Retrouvez-moi sur</span>
+        <div class="social-list">
+          <a class="social-item" href="https://linkedin.com/in/lucas-bousquet" target="_blank">
+            <span class="social-name">LinkedIn</span>
+            <span class="social-arrow">↗</span>
+          </a>
+          <a class="social-item" href="https://github.com/lucas-bousquet" target="_blank">
+            <span class="social-name">GitHub</span>
+            <span class="social-arrow">↗</span>
+          </a>
+          <a class="social-item" href="https://instagram.com/lucas.bousquet" target="_blank">
+            <span class="social-name">Instagram</span>
+            <span class="social-arrow">↗</span>
+          </a>
+          <a class="social-item" href="https://behance.net/lucasbousquet" target="_blank">
+            <span class="social-name">Behance</span>
+            <span class="social-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulaire -->
+      <div class="contact-col">
+        <span class="contact-col-label">Envoyer un message</span>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-field">
+            <label for="name">Nom</label>
+            <input type="text" id="name" placeholder="Votre nom" required>
+          </div>
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="votre@email.com" required>
+          </div>
+          <div class="form-field">
+            <label for="subject">Sujet</label>
+            <input type="text" id="subject" placeholder="De quoi s'agit-il ?">
+          </div>
+          <div class="form-field">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Décrivez votre projet ou votre besoin..." required></textarea>
+          </div>
+          <button class="btn-send" type="submit" id="sendBtn">Envoyer →</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DISPONIBILITÉ -->
+  <section class="section" style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); padding:0;">
+    <div style="background:var(--white); padding:3vw 3vw;">
+      <p style="font-family:'DM Sans',sans-serif; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--red); margin-bottom:1rem;">Disponibilité</p>
+      <p style="font-family:'Fraunces',serif; font-weight:900; font-size:clamp(20px,3vw,42px); line-height:1.1; letter-spacing:-0.02em;">Ouvert aux<br><em style="font-style:italic;">projets.</em></p>
+    </div>
+    <div style="background:var(--white); padding:3vw 3vw; display:flex; flex-direction:column; justify-content:center;">
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#2a9d5c;flex-shrink:0;"></span>
+        <div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:var(--black);">Disponible pour collaborer sur un projet</p>
+          <p style="font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(10,10,10,0.4);">Vous avez besoin d'un profil comme le mien ? N'hésitez pas à me contacter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span class="footer-copy">© 2025 Lucas Bousquet — MMI Béziers</span>
+    <a class="footer-back" href="index-v2.html">← Retour à l'accueil</a>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sendBtn');
+      btn.textContent = 'Envoyé ✓';
+   

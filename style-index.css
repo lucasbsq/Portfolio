@@ -1,0 +1,688 @@
+/* =====================================================
+   style-index.css — Page d'accueil de Lucas Bousquet
+   
+   PALETTE :
+     #000        → fond principal (noir pur)
+     #fff        → texte principal (blanc)
+     #e02020     → couleur accent (rouge)
+     rgba(255,255,255,0.XX) → blanc semi-transparent
+   
+   POLICES :
+     'Fraunces'          → titres (serif italique gras, grand impact)
+     'DM Sans'           → corps de texte (lisible, moderne)
+     'Century Gothic' / 'Futura' / 'Trebuchet MS' → labels, tags, petits textes
+     'Anton'             → texte défilant marquee (ligne droite, sans-serif condensé)
+     'Playfair Display'  → texte défilant marquee (serif élégant)
+   ===================================================== */
+
+/* =====================================================
+   RESET — Suppression des marges/paddings par défaut du navigateur
+   box-sizing: border-box → les padding et border sont inclus dans width/height
+   ===================================================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   BASE — Fond noir, pas de scroll horizontal
+   overflow-x: hidden → important pour les animations qui utilisent translateX
+   ===================================================== */
+html, body {
+  background: #000;
+  overflow-x: hidden;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* =====================================================
+   NAV — Barre de navigation fixe en haut de page
+   z-index: 100 → toujours au-dessus de tout le contenu
+   pointer-events: none sur le conteneur → la zone invisible de la nav n'intercepte pas les clics
+   On réactive pointer-events individuellement sur .nav-logo et .nav-links
+   ===================================================== */
+.nav {
+  position: fixed;
+  top: 2rem;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7vw; /* Marges proportionnelles à la largeur de l'écran */
+  pointer-events: none;
+}
+
+/* Logo — cliquable, ramène à index.html */
+.nav-logo {
+  width: 115px;
+  height: 115px;
+  pointer-events: auto; /* Réactivation du clic sur le logo uniquement */
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* L'image garde ses proportions */
+}
+
+/* Conteneur des liens — forme "capsule" (pill) avec effet glassmorphism
+   backdrop-filter: blur → flou de l'arrière-plan visible à travers le fond semi-transparent
+   L'animation navIn fait descendre la nav depuis le haut au chargement de la page */
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);  /* Fond blanc très transparent */
+  backdrop-filter: blur(20px);            /* Effet verre dépoli */
+  -webkit-backdrop-filter: blur(20px);    /* Préfixe nécessaire pour Safari */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 100px; /* Forme pilule */
+  padding: 0.55rem;
+  pointer-events: auto;
+  /* État initial avant l'animation */
+  opacity: 0;
+  transform: translateY(-10px);
+  /* L'animation "navIn" joue après 0.4s et remplit (forwards) l'état final */
+  animation: navIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+
+/* Liens individuels dans la nav */
+.nav-links li a {
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.12em; /* Espacement des lettres pour effet premium */
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 1.3rem;
+  border-radius: 100px;
+  transition: color 0.25s ease, background 0.25s ease;
+  white-space: nowrap;
+}
+
+/* Hover ET lien actif (page courante) : fond blanc, texte noir */
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: #000;
+  background: #fff;
+}
+
+/* =====================================================
+   MARQUEE — Texte défilant affiché derrière le hero rétréci
+   Visible uniquement quand p > 0.4 dans l'animation de scroll (géré par le JS)
+   overflow: hidden sur chaque .marquee-row pour éviter le dépassement horizontal
+   ===================================================== */
+.marquee-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  opacity: 0;        /* Contrôlé par le JS au scroll */
+  z-index: 1;        /* Derrière le hero (z-index: 2) mais devant le fond */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.marquee-row {
+  overflow: hidden; /* Cache le débordement horizontal du texte en mouvement */
+  width: 100%;
+}
+
+/* Piste de texte défilant — width: max-content pour ne pas revenir à la ligne */
+.marquee-track {
+  display: flex;
+  gap: 2rem;
+  white-space: nowrap;
+  width: max-content; /* S'étend aussi loin que nécessaire */
+}
+
+/* Style des spans dans la piste — chaque mot/séparateur est un élément flex */
+.marquee-track span {
+  font-size: clamp(28px, 4.5vw, 70px); /* Taille fluide : 28px min, 70px max */
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  flex-shrink: 0; /* Empêche les spans de rétrécir */
+}
+
+/* Ligne 1 : police serif italique (Playfair Display) */
+.marquee-left span {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+/* Ligne 2 : police condensée bold (Anton) */
+.marquee-right span {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+/* Ligne 1 défile vers la gauche — animation CSS pure en boucle infinie */
+.marquee-left {
+  animation: scrollLeft 20s linear infinite;
+}
+
+/* Ligne 2 défile vers la droite (commence à -50% pour créer l'illusion de continuité) */
+.marquee-right {
+  animation: scrollRight 20s linear infinite;
+}
+
+/* =====================================================
+   HERO BOX — L'image principale plein écran
+   Démarre à top:0 left:0 width:100vw height:100vh
+   Le JS modifie dynamiquement ces valeurs au scroll pour créer l'effet de rétrécissement
+   ===================================================== */
+.hero-box {
+  position: absolute; /* Positionné dans .hero-stage (position:fixed) */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('hero.webp');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  z-index: 2; /* Au-dessus du marquee (z-index:1) */
+}
+
+/* Overlay sombre sur l'image hero pour améliorer la lisibilité du texte par-dessus
+   ::before = pseudo-élément qui crée un calque sans HTML supplémentaire */
+.hero-box::before {
+  content: '';
+  position: absolute;
+  inset: 0; /* Couvre tout le hero */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%);
+  pointer-events: none; /* Non interactif */
+}
+
+/* Contenu textuel du hero — positionné en bas à gauche */
+.hero-content {
+  position: absolute;
+  bottom: 4vw;
+  left: 7vw;
+  z-index: 2; /* Au-dessus de l'overlay ::before */
+}
+
+/* ===== Éléments du texte hero ===== */
+
+/* Petit label au-dessus du titre — s'anime avec fadeUp */
+.tag {
+  display: inline-block;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: clamp(10px, 1.1vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.8); /* Ombre pour lisibilité sur photo */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+/* Grand titre "Lucas / Bousquet." en Fraunces italic */
+.headline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(72px, 13vw, 200px); /* Très grand, s'adapte à l'écran */
+  line-height: 0.92; /* Interligne serré pour effet graphique fort */
+  color: #fff;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+/* Chaque ligne du titre est wrappée dans .line
+   overflow: hidden masque le span pendant qu'il "monte" depuis le bas */
+.line {
+  display: block;
+  overflow: hidden;
+}
+
+/* Le span intérieur démarre hors du cadre (110% vers le bas) et remonte */
+.line span {
+  display: block;
+  transform: translateY(110%);
+  animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Délais en cascade : "Lucas" apparaît avant "Bousquet." */
+.line:nth-child(1) span { animation-delay: 0.5s; }
+.line:nth-child(2) span { animation-delay: 0.7s; }
+
+/* .accent = le mot "Lucas" — a un soulignement rouge qui grandit après l'animation */
+.accent {
+  position: relative;
+}
+
+/* Soulignement rouge animé sous "Lucas" — grandit de 0 à 100% via lineGrow */
+.accent::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;         /* Commence invisible */
+  height: 2px;
+  background: #e02020;
+  animation: lineGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards; /* Délai après l'apparition du nom */
+}
+
+/* Texte description sous le titre — s'anime en dernier */
+.sub {
+  margin-top: 2.5rem;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: clamp(13px, 1.2vw, 16px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 340px;
+  line-height: 1.7;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards;
+}
+
+/* Bouton "Voir mon travail" — style outline pill, hover rouge */
+.cta {
+  margin-top: 2.8rem;
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.5); /* Contour blanc semi-transparent */
+  border-radius: 100px;
+  padding: 0.75rem 1.6rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards;
+}
+
+/* Hover : le bouton devient rouge */
+.cta:hover {
+  background: #e02020;
+  border-color: #e02020;
+}
+
+/* =====================================================
+   SCROLL SPACE — Zone vide qui crée l'espace scrollable
+   Sa hauteur est calculée par le JS (animDist + winH×0.75)
+   Sans cet espace, le scroll n'existerait pas et l'animation ne se déclencherait jamais
+   z-index: 0 → en dessous du hero-stage (z-index: 2)
+   ===================================================== */
+.scroll-space {
+  position: relative;
+  z-index: 0;
+}
+
+/* Zone après le hero — sections "À propos", "Compétences", etc. */
+.next {
+  position: relative;
+  z-index: 0;
+  min-height: 100vh;
+  background: #000;
+}
+
+/* =====================================================
+   SECTION ABOUT — Section "À propos" (si présente)
+   Apparaît après le scroll du hero grâce au z-index et au scroll-space
+   ===================================================== */
+
+.about {
+  position: relative;
+  background: #000;
+  padding: 10vw 7vw 8vw;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  z-index: auto;
+}
+
+/* Layout flex : texte à gauche + badge/image à droite */
+.about-inner {
+  display: flex;
+  gap: 6vw;
+  align-items: flex-start;
+  max-width: 1400px;
+}
+
+/* Colonne de texte — prend tout l'espace disponible */
+.about-content {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+/* Petit label rouge au-dessus du titre (ex: "À propos") */
+.about-tag {
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #e02020;
+  margin-bottom: 2rem;
+  display: block;
+  /* Etat initial pour l'animation au scroll */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Grand titre de la section About */
+.about-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(40px, 5.5vw, 88px);
+  line-height: 1.0;
+  color: #fff;
+  margin-bottom: 3rem;
+}
+
+/* Partie italique du titre About — plus transparente */
+.about-title em {
+  font-style: italic;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Lignes du titre About — même système que le hero (overflow:hidden + translateY) */
+.about-line {
+  display: block;
+  overflow: hidden;
+}
+
+.about-line span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Paragraphes du texte About */
+.about-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.about-text {
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: clamp(13px, 1.2vw, 17px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.9;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Mots mis en valeur dans le texte About */
+.about-accent {
+  color: #fff;
+  font-weight: 400;
+}
+
+/* Liste de compétences en pills */
+.about-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 3rem;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.about-skills span {
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 0.45rem 1.1rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.about-skills span:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.45);
+}
+
+/* Numéro décoratif en filigrane dans la section About */
+.about-number {
+  position: absolute;
+  bottom: -2vw;
+  right: 5vw;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(100px, 18vw, 260px);
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* =====================================================
+   ANIMATIONS AU SCROLL — Section About
+   La classe "in-view" est ajoutée par un IntersectionObserver en JS
+   quand la section entre dans le viewport
+   Chaque élément a un transition-delay différent → effet cascade
+   ===================================================== */
+.about.in-view .about-photo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about.in-view .about-tag {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.15s;
+}
+
+/* Les lignes du titre s'animent en cascade */
+.about.in-view .about-line:nth-child(1) span { transform: translateY(0); transition-delay: 0.25s; }
+.about.in-view .about-line:nth-child(2) span { transform: translateY(0); transition-delay: 0.38s; }
+.about.in-view .about-line:nth-child(3) span { transform: translateY(0); transition-delay: 0.51s; }
+
+/* Les paragraphes apparaissent après le titre */
+.about.in-view .about-text:nth-of-type(1) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+.about.in-view .about-text:nth-of-type(2) { opacity: 1; transform: translateY(0); transition-delay: 0.45s; }
+.about.in-view .about-text:nth-of-type(3) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+
+/* Les compétences apparaissent en dernier */
+.about.in-view .about-skills {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.7s;
+}
+
+/* =====================================================
+   KEYFRAMES — Animations CSS réutilisées partout dans la page
+   ===================================================== */
+
+/* Entrée de la nav depuis le haut */
+@keyframes navIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Remontée du texte depuis le bas (lignes de titre) */
+@keyframes slideUp {
+  to { transform: translateY(0); }
+}
+
+/* Apparition progressive + légère remontée (labels, descriptions, boutons) */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Croissance du trait rouge sous "Lucas" */
+@keyframes lineGrow {
+  to { width: 100%; }
+}
+
+/* Défilement vers la gauche — le track se déplace de 0 à -50% de sa largeur
+   Le contenu est dupliqué donc à -50% on revient visuellement au début → boucle parfaite */
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Défilement vers la droite — part de -50% et revient à 0 → même logique inversée */
+@keyframes scrollRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* =====================================================
+   BADGE SUSPENDU — Composant animé (côté droit de la section About)
+   Simule un badge d'identification suspendu à un cordon
+   Peut être retourné au clic (effet flip 3D avec preserve-3d)
+   ===================================================== */
+.hero-anchor {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hero stage — conteneur fixe (position:fixed) qui englobe hero + marquee
+   Il se déplace vers le haut en phase 2 via transform: translateY (géré par le JS) */
+.hero-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none; /* Le stage entier est non interactif */
+}
+
+/* Zone du badge — taille fixe, position relative pour le canvas et le badge */
+.badge-area {
+  flex: 0 0 auto;
+  width: 360px;
+  min-height: 620px;
+  position: relative;
+}
+
+/* Canvas pour dessiner le cordon du badge (SVG ou canvas HTML)
+   Positionné en absolu pour couvrir toute la zone */
+.badge-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* Wrapper du badge — draggable (cursor: grab)
+   transform-origin: top center → le badge se balance depuis son accroche en haut
+   perspective → active la 3D pour l'effet de flip */
+.badge-wrap {
+  position: absolute;
+  width: 360px;
+  height: 480px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transform-origin: top center;
+  z-index: 2;
+  perspective: 1000px; /* Distance de perspective pour la 3D */
+}
+
+.badge-wrap:active { cursor: grabbing; }
+
+/* Conteneur intérieur avec preserve-3d pour le flip
+   La transition sur transform crée le flip animé */
+.badge-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d; /* Les faces avant/arrière sont en 3D */
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Classe ajoutée par le JS au clic → déclenche la rotation 180° (flip) */
+.badge-inner.flipped { transform: rotateY(180deg); }
+
+/* Face commune (avant et arrière) */
+.badge-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;         /* Cache la face quand elle est dos à nous */
+  -webkit-backface-visibility: hidden; /* Préfixe Safari */
+}
+
+/* Face avant du badge */
+.badge-front {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Face arrière — retournée de 180° par défaut (visible après le flip) */
+.badge-back {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  transform: rotateY(180deg); /* Retournée pour apparaître correctement après le flip */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Trou du badge (avant) — cercle décoratif en haut du badge simulant l'œillet */
+.badge-hole {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: #000;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+}
+
+/* Trou du badge (arrière) — même chose pour la face arrière */
+.badge-hole-back {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: #000;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+}
+
+/* Zone photo du badge — remplit le reste de la face */
+.badge-face-photo {
+  flex: 1; /* Prend tout l'espace disponible après le trou */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+}
+
+/* Photo dans le badge — couvre toute la zone, centrée en haut pour bien cadrer le visage */
+.badge-face-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top; /* Centre sur le haut (visage) plutôt que le milieu */
+  display: block;
+}

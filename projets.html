@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projets — Lucas Bousquet</title>
+  <link rel="icon" type="image/webp" href="logo.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,900;1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-projets.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-logo" href="index-v2.html">Lucas</a>
+    <ul class="nav-links">
+      <li><a href="index-v2.html">Accueil</a></li>
+      <li><a href="projets.html" class="active">Projets</a></li>
+      <li><a href="competences.html">Compétences</a></li>
+      <li><a href="apropos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <p class="page-label">Portfolio</p>
+      <h1 class="page-title">
+        <span class="page-line"><span>Mes</span></span>
+        <span class="page-line"><span>Projets<em style="font-style:normal;color:#e02020;">.</em></span></span>
+      </h1>
+      <p class="page-sub">Développement web, graphisme, communication — tout ce que j'ai construit.</p>
+    </div>
+  </header>
+
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Tout</button>
+    <button class="filter-btn" data-filter="dev">Développement</button>
+    <button class="filter-btn" data-filter="design">Graphisme</button>
+    <button class="filter-btn" data-filter="comm">Communication</button>
+  </div>
+
+  <main class="projects-grid" id="projets">
+
+    <article class="project-card" data-category="design">
+      <a class="project-link" href="iceland.html">
+        <div class="project-img">
+          <img src="./" alt="Projet graphisme">
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Graphisme</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="project-card" data-category="design">
+      <a class="project-link" href="#">
+        <div class="project-img">
+          <div class="project-placeholder"><span>Image du projet</span></div>
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Graphisme</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="project-card project-card--large" data-category="comm">
+      <a class="project-link" href="#">
+        <div class="project-img">
+          <div class="project-placeholder"><span>Image du projet</span></div>
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Communication</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="project-card" data-category="dev">
+      <a class="project-link" href="#">
+        <div class="project-img">
+          <div class="project-placeholder"><span>Image du projet</span></div>
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Développement</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="project-card" data-category="design">
+      <a class="project-link" href="#">
+        <div class="project-img">
+          <div class="project-placeholder"><span>Image du projet</span></div>
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Graphisme</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="project-card" data-category="comm">
+      <a class="project-link" href="#">
+        <div class="project-img">
+          <div class="project-placeholder"><span>Image du projet</span></div>
+          <div class="project-overlay"><span class="project-cta">Voir le projet →</span></div>
+        </div>
+        <div class="project-info">
+          <h2 class="project-title">Nom du projet</h2>
+          <span class="project-cat">Communication</span>
+        </div>
+      </a>
+    </article>
+
+  </main>
+
+  <script>
+    const btns  = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.project-card');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.style.opacity       = match ? '1' : '0.12';
+          card.style.transform     = match ? 'scale(1)' : 'scale(0.97)';
+          card.style.pointerEvents = match ? 'auto' : 'none';
+        });
+      });
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    cards.forEach(c => observer.observe(c));
+  </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bousquet Lucas</title>
+  <link rel="icon" type="image/webp" href="logo.webp">
+  <!-- Polices Google Fonts : Fraunces (serif italique gras pour les titres), DM Sans (corps de texte), Anton et Playfair Display (marquee défilant) -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400&family=Anton&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-index.css">
+</head>
+<body>
+
+  <!-- =====================================================
+       NAV — Barre de navigation fixe en haut de page
+       Elle reste visible par-dessus tout le contenu grâce à z-index: 100
+       Les liens scrollent vers les sections via des ancres (#competences, #apropos, #contact)
+       ===================================================== -->
+  <nav class="nav">
+    <!-- Logo cliquable qui ramène à l'accueil -->
+    <div class="nav-logo"><a href="index.html"><img src="logo.webp" alt="Logo Lucas Bousquet"></a></div>
+    <ul class="nav-links">
+      <!-- Lien Accueil : ramène au début de index.html — classe "active" car on est sur cette page -->
+      <li><a href="index.html" class="active">Accueil</a></li>
+      <!-- Lien Projets : ouvre la page projets.html -->
+      <li><a href="./projets.html">Projets</a></li>
+      <!-- Liens d'ancres : scrollent vers les sections correspondantes sur la page d'accueil -->
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- =====================================================
+       HERO STAGE — Conteneur fixe qui englobe le hero et le texte défilant
+       Il est en position: fixed pour rester collé à l'écran pendant le scroll
+       Le JS le fait "monter" en phase 2 de l'animation via translateY
+       ===================================================== -->
+  <div class="hero-stage">
+
+    <!-- MARQUEE — Texte défilant qui apparaît progressivement quand le hero rétrécit -->
+    <!-- Opacity contrôlée par le JS en fonction du scroll (apparaît après 40% de la phase 1) -->
+    <div class="marquee-bg">
+      <!-- Ligne 1 : défile vers la gauche (animation scrollLeft) -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-left">
+          <!-- Le contenu est dupliqué pour créer un effet de boucle infinie sans coupure visible -->
+          <span>Développement Web</span><span>—</span><span>Graphisme</span><span>—</span><span>Stratégie de Communication</span><span>—</span><span>MMI</span><span>—</span>
+          <span>Développement Web</span><span>—</span><span>Graphisme</span><span>—</span><span>Stratégie de Communication</span><span>—</span><span>MMI</span><span>—</span>
+        </div>
+      </div>
+      <!-- Ligne 2 : défile vers la droite (animation scrollRight, part à -50% et revient à 0) -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-right">
+          <span>Lucas Bousquet</span><span>—</span><span>Étudiant MMI</span><span>—</span><span>Design</span><span>—</span><span>Code</span><span>—</span><span>Créativité</span><span>—</span>
+          <span>Lucas Bousquet</span><span>—</span><span>Étudiant MMI</span><span>—</span><span>Design</span><span>—</span><span>Code</span><span>—</span><span>Créativité</span><span>—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO BOX — La grande image plein écran au départ
+         Le JS modifie dynamiquement width/height/top/left/borderRadius au scroll
+         Elle passe de 100vw×100vh (plein écran) à 38vw×48vh (vignette centrée) -->
+    <div class="hero-box">
+      <!-- Contenu textuel du hero : s'efface au fur et à mesure que le hero rétrécit -->
+      <!-- Le JS fait passer opacity de 1 à 0 très rapidement (×3 plus vite que le shrink) -->
+      <div class="hero-content">
+        <p class="tag">Étudiant en MMI</p>
+        <h1 class="headline">
+          <!-- Chaque .line cache son contenu avec overflow:hidden puis l'anime vers le haut (slideUp) -->
+          <span class="line"><span class="accent">Lucas</span></span>
+          <span class="line"><span>Bousquet.</span></span>
+        </h1>
+        <p class="sub">Apprenti en développement web, graphisme et stratégie de communication.</p>
+        <a class="cta" href="#">Voir mon travail</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =====================================================
+       SCROLL SPACE — Espace vide qui donne de la "hauteur" à scroller
+       Sans cet espace, la page n'aurait pas de scroll et l'animation ne se déclencherait pas
+       Sa hauteur est calculée par le JS : animDist (2×vh) + winH×0.75 (pause avant section suivante)
+       ===================================================== -->
+  <div class="scroll-space"></div>
+
+
+
+  <script>
+    // =====================================================
+    // RÉFÉRENCES DOM — On récupère les éléments HTML qu'on va manipuler
+    // =====================================================
+    const stage       = document.querySelector('.hero-stage');   // Le conteneur fixe entier
+    const heroBox     = document.querySelector('.hero-box');     // La boîte image du hero
+    const heroContent = document.querySelector('.hero-content'); // Le texte dans le hero
+    const marqueBg    = document.querySelector('.marquee-bg');   // Le fond de texte défilant
+    const winH        = window.innerHeight;  // Hauteur de la fenêtre en pixels
+    const winW        = window.innerWidth;   // Largeur de la fenêtre en pixels
+
+    // Distance de scroll nécessaire pour compléter l'animation de rétrécissement (phase 1)
+    const animDist    = winH * 2;
+
+    const scrollSpace = document.querySelector('.scroll-space');
+
+    // Taille finale du hero après rétrécissement (en unités viewport)
+    const tw = 38; // largeur finale : 38vw
+    const th = 48; // hauteur finale : 48vh
+
+    // On calcule la hauteur totale du scroll :
+    // animDist pour le shrink + winH×0.75 pour laisser le hero visible un moment avant la suite
+    scrollSpace.style.height = (animDist + winH * 0.75) + 'px';
+
+    // =====================================================
+    // CALCUL DU BACKGROUND-SIZE EN MODE "COVER"
+    // On reproduit manuellement le comportement de background-size:cover
+    // pour pouvoir l'agrandir progressivement au scroll (effet de zoom doux)
+    // =====================================================
+    let coverSizePct = 100; // valeur par défaut, remplacée quand l'image charge
+
+    const bgImg = new Image();
+    bgImg.src = 'hero.webp';
+    bgImg.onload = () => {
+      // On calcule le facteur de zoom minimal pour que l'image couvre toute la fenêtre
+      const scaleW = winW / bgImg.naturalWidth;
+      const scaleH = winH / bgImg.naturalHeight;
+      // On garde le plus grand des deux facteurs (comme background-size:cover)
+      coverSizePct = (Math.max(scaleW, scaleH) * bgImg.naturalWidth / winW) * 100;
+      applyScroll(window.scrollY); // On applique immédiatement avec la bonne valeur
+    };
+
+    // =====================================================
+    // FONCTION PRINCIPALE — Applique l'état visuel en fonction du scroll
+    // Appelée à chaque événement 'scroll' et une fois au chargement
+    // =====================================================
+    function applyScroll(scrollY) {
+
+      // --- PHASE 1 : RÉTRÉCISSEMENT (scroll de 0 à animDist) ---
+      // p est le pourcentage de progression : 0 = début, 1 = hero à sa taille finale
+      const p = Math.min(Math.max(scrollY / animDist, 0), 1);
+
+      // Interpolation linéaire : on passe de 100% à tw% (largeur) et 100% à th% (hauteur)
+      const w       = 100 - (100 - tw) * p;
+      const h       = 100 - (100 - th) * p;
+      // On centre la boîte : si elle fait w%, elle doit être décalée de (100-w)/2 depuis la gauche
+      const topVal  = (100 - h) / 2;
+      const leftVal = (100 - w) / 2;
+
+      // On applique les nouvelles dimensions et position au hero
+      heroBox.style.width        = w + 'vw';
+      heroBox.style.height       = h + 'vh';
+      heroBox.style.top          = topVal + 'vh';
+      heroBox.style.left         = leftVal + 'vw';
+      // Les coins s'arrondissent progressivement au fil du rétrécissement
+      heroBox.style.borderRadius = (p * 20) + 'px';
+
+      // L'image de fond grossit légèrement (effet de zoom doux)
+      heroBox.style.backgroundSize     = (coverSizePct + 40 * p) + '%';
+      // Et remonte légèrement (de 30% à 20% de position verticale)
+      heroBox.style.backgroundPosition = 'center ' + (30 - p * 10) + '%';
+
+      // Le texte du hero s'efface rapidement (×3) dès le début du scroll
+      heroContent.style.opacity = Math.max(0, 1 - p * 3);
+      // Le marquee apparaît seulement après 40% de progression, sur 40% de marge
+      marqueBg.style.opacity    = Math.min(1, Math.max(0, (p - 0.4) / 0.4));
+
+      // --- PHASE 2 : MONTÉE DU STAGE (scroll de animDist à animDist + winH) ---
+      // Une fois le rétrécissement terminé, tout le stage (hero + marquee) monte ensemble
+      // comme si la section suivante le poussait vers le haut
+      const scrollPhase2 = Math.max(0, scrollY - animDist);
+      stage.style.transform = `translateY(-${scrollPhase2}px)`;
+    }
+
+    // Application initiale (au cas où la page se charge déjà scrollée)
+    applyScroll(window.scrollY);
+
+    // Écoute du scroll — { passive: true } améliore les performances (pas de preventDefault possible)
+    window.addEventListener('scroll', () => applyScroll(window.scrollY), { passive: true });
+
+  </script>
+
+</body>
+</html>
